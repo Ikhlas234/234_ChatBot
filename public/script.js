@@ -121,3 +121,85 @@ function renderMarkdown(text) {
 // ==========================================================
 // Membuat elemen pesan
 // ==========================================================
+function timeNow() {
+  return new Date().toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function scrollToBottom() {
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function addMessage(role, text = "", { typing = false } = {}) {
+  const wrapper = document.createElement("div");
+  wrapper.className = `message ${role}`;
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.innerHTML = role === "bot" ? BOT_ICON : "Anda";
+  if (role === "user") avatar.textContent = "A";
+
+  const body = document.createElement("div");
+  body.className = "msg-body";
+
+  const bubble = document.createElement("div");
+  bubble.className = "bubble";
+
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  meta.innerHTML = `<span>${timeNow()}</span>`;
+
+  body.append(bubble, meta);
+  wrapper.append(avatar, body);
+  chatBox.appendChild(wrapper);
+
+  if (role === "user") {
+    bubble.textContent = text;
+  } else if (typing) {
+    bubble.innerHTML =
+      '<div class="typing" aria-label="Sedang mengetik"><span></span><span></span><span></span></div>';
+  } else {
+    bubble.innerHTML = renderMarkdown(text);
+  }
+
+  scrollToBottom();
+
+  return {
+    el: wrapper,
+
+    setContent(content) {
+      bubble.innerHTML = renderMarkdown(content);
+      scrollToBottom();
+    },
+
+    setError(message) {
+      wrapper.classList.add("error");
+      bubble.textContent = message;
+      scrollToBottom();
+    },
+
+    finish(fullText) {
+      // Tombol salin hanya untuk balasan bot
+      const copy = document.createElement("button");
+      copy.type = "button";
+      copy.className = "copy-btn";
+      copy.textContent = "Salin";
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(fullText);
+          copy.textContent = "Tersalin ✓";
+        } catch {
+          copy.textContent = "Gagal menyalin";
+        }
+        setTimeout(() => (copy.textContent = "Salin"), 1800);
+      });
+      meta.appendChild(copy);
+    },
+  };
+}
+
+// ==========================================================
+// Helper UI
+// ==========================================================

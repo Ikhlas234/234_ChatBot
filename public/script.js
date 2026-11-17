@@ -203,3 +203,22 @@ function addMessage(role, text = "", { typing = false } = {}) {
 // ==========================================================
 // Helper UI
 // ==========================================================
+function setLoading(state) {
+  isLoading = state;
+  sendBtn.classList.toggle("stop", state);
+  sendLabel.textContent = state ? "Stop" : "Kirim";
+  input.disabled = state;
+
+  if (!state) input.focus();
+}
+
+function autoResize() {
+  input.style.height = "auto";
+  input.style.height = `${Math.min(input.scrollHeight, 150)}px`;
+}
+
+function showWelcome() {
+  addMessage("bot", WELCOME_TEXT).finish(WELCOME_TEXT);
+}
+
+// Mengambil pesan error yang ramah dari respons server

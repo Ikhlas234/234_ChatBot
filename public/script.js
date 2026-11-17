@@ -23,3 +23,18 @@ const clearBtn = document.getElementById("clear-btn");
 const suggestions = document.getElementById("suggestions");
 
 // ---------- State ----------
+let history = []; // riwayat percakapan (tanpa system prompt)
+let isLoading = false;
+let controller = null; // untuk menghentikan respons
+let session = 0; // naik setiap percakapan direset
+
+// ---------- Ikon ----------
+const BOT_ICON = `
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 8V4H8" /><rect x="4" y="8" width="16" height="12" rx="3" />
+    <path d="M2 14h2M20 14h2M9 13v2M15 13v2" />
+  </svg>`;
+
+// ==========================================================
+// Markdown sederhana (aman dari XSS: HTML di-escape dulu)
+// ==========================================================

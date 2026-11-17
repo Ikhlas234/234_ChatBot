@@ -325,4 +325,41 @@ async function sendMessage(rawText) {
       }
     }
 
-   
+    if (!reply.trim()) {
+      throw new Error("Tidak ada respons dari AI. Coba kirim ulang pesan Anda.");
+    }
+
+    history.push({ role: "assistant", content: reply });
+    bot.finish(reply);
+  } catch (err) {
+    // Percakapan sudah direset oleh pengguna: abaikan hasil lama
+    if (mySession !== session) return;
+
+    if (err.name === "AbortError") {
+      // Pengguna menekan Stop
+      if (reply.trim()) {
+        history.push({ role: "assistant", content: reply });
+        bot.finish(reply);
+      } else {
+        history.pop();
+        bot.setError("Respons dihentikan.");
+      }
+    } else {
+      history.pop(); // buang pesan terakhir agar bisa dikirim ulang
+      const message =
+        err instanceof TypeError
+          ? "Tidak dapat terhubung ke server. Periksa koneksi internet Anda."
+          : err.message;
+      bot.setError(message);
+    }
+  } finally {
+    if (mySession === session) {
+      controller = null;
+      setLoading(false);
+    }
+  }
+}
+
+// ==========================================================
+// Event listener
+// ==========================================================

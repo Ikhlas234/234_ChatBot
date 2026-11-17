@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Chatbot AI dengan respons streaming real-time" />
+    <title>Chatbot AI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- Dekorasi latar belakang -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <main class="app">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 8V4H8" />
+              <rect x="4" y="8" width="16" height="12" rx="3" />
+              <path d="M2 14h2M20 14h2M9 13v2M15 13v2" />
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>Chatbot AI</h1>
+            <p><span class="status-dot"></span>inclusionAI Ling 3.2 Flash</p>
+          </div>
+        </div>
+
+        <button id="clear-btn" class="icon-btn" type="button" title="Percakapan baru" aria-label="Percakapan baru">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 6h18" />
+            <path d="M8 6V4h8v2" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v6M14 11v6" />
+          </svg>
+        </button>
+      </header>
+
+      <!-- Area pesan -->
+      <section id="chat-box" class="chat-box" aria-live="polite" aria-label="Riwayat percakapan"></section>
+
+      <!-- Saran pertanyaan -->
+      <div id="suggestions" class="suggestions">
+        <button type="button" class="chip" data-prompt="Jelaskan apa itu REST API dengan bahasa sederhana">💡 Apa itu REST API?</button>
+        <button type="button" class="chip" data-prompt="Buatkan contoh fungsi JavaScript untuk menghitung faktorial">💻 Contoh kode JavaScript</button>
+        <button type="button" class="chip" data-prompt="Berikan tips belajar pemrograman untuk pemula">🚀 Tips belajar coding</button>
+        <button type="button" class="chip" data-prompt="Ceritakan satu fakta menarik tentang teknologi">✨ Fakta menarik</button>
+      </div>
+
+      <!-- Form input -->
+      <form id="chat-form" class="composer" autocomplete="off">
+        <textarea
+          id="user-input"
+          rows="1"
+          placeholder="Ketik pesan..."
+          aria-label="Ketik pesan"
+          maxlength="4000"
+        ></textarea>
+        <button id="send-btn" class="send-btn" type="submit">
+          <span class="send-label">Kirim</span>
+          <svg class="send-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 2L11 13" />
+            <path d="M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        </button>
+      </form>
+
+      <p class="disclaimer">Enter untuk kirim · Shift + Enter untuk baris baru · AI bisa saja keliru, periksa informasi penting.</p>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

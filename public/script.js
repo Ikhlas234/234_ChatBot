@@ -257,3 +257,35 @@ async function readError(res) {
 // ==========================================================
 // Kirim pesan + baca streaming
 // ==========================================================
+async function sendMessage(rawText) {
+  const text = rawText.trim();
+  if (!text || isLoading) return;
+
+  suggestions.classList.add("hidden");
+
+  addMessage("user", text);
+  history.push({ role: "user", content: text });
+
+  input.value = "";
+  autoResize();
+  setLoading(true);
+
+  const bot = addMessage("bot", "", { typing: true });
+  controller = new AbortController();
+  const mySession = session;
+
+  let reply = "";
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [SYSTEM_PROMPT, ...history] }),
+      signal: controller.signal,
+    });
+
+    if (!res.ok) {
+      throw new Error(await readError(res));
+    }
+
+    

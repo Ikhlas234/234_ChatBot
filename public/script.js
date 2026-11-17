@@ -54,4 +54,38 @@ function renderMarkdown(text) {
   let src = escapeHtml(text);
 
   // Blok kode ```lang ... ``` (termasuk yang belum ditutup saat streaming)
- 
+  src = src.replace(/```[\w-]*\n?([\s\S]*?)(```|$)/g, (_, code) => {
+    codeBlocks.push(`<pre><code>${code.replace(/\n$/, "")}</code></pre>`);
+    return `@@CODE${codeBlocks.length - 1}@@`;
+  });
+
+  // Kode inline
+  src = src.replace(/`([^`\n]+)`/g, (_, code) => {
+    inlineCodes.push(`<code>${code}</code>`);
+    return `@@INL${inlineCodes.length - 1}@@`;
+  });
+
+  const formatInline = (s) =>
+    s
+      .replace(/\*\*(?!\s)([^*\n]+?)(?<!\s)\*\*/g, "<strong>$1</strong>")
+      .replace(/(?<![*\w])\*(?!\s)([^*\n]+?)(?<!\s)\*(?!\*)/g, "<em>$1</em>");
+
+  const out = [];
+  let listType = null;
+
+  const closeList = () => {
+    if (listType) {
+      out.push(`</${listType}>`);
+      listType = null;
+    }
+  };
+
+  const openList = (type) => {
+    if (listType !== type) {
+      closeList();
+      out.push(`<${type}>`);
+      listType = type;
+    }
+  };
+
+  

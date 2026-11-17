@@ -14,3 +14,12 @@ const SYSTEM_PROMPT = {
 const WELCOME_TEXT = "Halo! Ada yang bisa saya bantu?";
 
 // ---------- Elemen DOM ----------
+const chatBox = document.getElementById("chat-box");
+const form = document.getElementById("chat-form");
+const input = document.getElementById("user-input");
+const sendBtn = document.getElementById("send-btn");
+const sendLabel = sendBtn.querySelector(".send-label");
+const clearBtn = document.getElementById("clear-btn");
+const suggestions = document.getElementById("suggestions");
+
+// ---------- State ----------

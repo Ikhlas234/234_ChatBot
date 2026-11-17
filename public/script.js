@@ -222,3 +222,38 @@ function showWelcome() {
 }
 
 // Mengambil pesan error yang ramah dari respons server
+async function readError(res) {
+  let raw = "";
+  try {
+    raw = await res.text();
+  } catch {
+    /* abaikan */
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    let detail = data.error;
+
+    // index.js meneruskan teks error OpenRouter (string JSON)
+    if (typeof detail === "string") {
+      try {
+        const inner = JSON.parse(detail);
+        detail = inner?.error?.message || detail;
+      } catch {
+        /* biarkan string apa adanya */
+      }
+    }
+
+    if (detail) return `Terjadi kesalahan (${res.status}): ${detail}`;
+  } catch {
+    /* bukan JSON */
+  }
+
+  // Tampilkan potongan isi respons agar penyebab error terlihat di chat
+  const snippet = raw.trim().slice(0, 200);
+  return `Terjadi kesalahan pada server (status ${res.status}).${snippet ? " " + snippet : ""}`;
+}
+
+// ==========================================================
+// Kirim pesan + baca streaming
+// ==========================================================

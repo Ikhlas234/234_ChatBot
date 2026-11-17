@@ -88,4 +88,36 @@ function renderMarkdown(text) {
     }
   };
 
-  
+  for (const line of src.split("\n")) {
+    let m;
+
+    if (/^@@CODE\d+@@$/.test(line.trim())) {
+      closeList();
+      out.push(line.trim());
+    } else if ((m = line.match(/^\s*[-*•]\s+(.*)$/))) {
+      openList("ul");
+      out.push(`<li>${formatInline(m[1])}</li>`);
+    } else if ((m = line.match(/^\s*\d+[.)]\s+(.*)$/))) {
+      openList("ol");
+      out.push(`<li>${formatInline(m[1])}</li>`);
+    } else if ((m = line.match(/^#{1,6}\s+(.*)$/))) {
+      closeList();
+      out.push(`<h4>${formatInline(m[1])}</h4>`);
+    } else if (line.trim() === "") {
+      closeList();
+    } else {
+      closeList();
+      out.push(`<p>${formatInline(line)}</p>`);
+    }
+  }
+  closeList();
+
+  return out
+    .join("")
+    .replace(/@@CODE(\d+)@@/g, (_, i) => codeBlocks[Number(i)])
+    .replace(/@@INL(\d+)@@/g, (_, i) => inlineCodes[Number(i)]);
+}
+
+// ==========================================================
+// Membuat elemen pesan
+// ==========================================================

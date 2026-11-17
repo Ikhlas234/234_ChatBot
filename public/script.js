@@ -38,3 +38,20 @@ const BOT_ICON = `
 // ==========================================================
 // Markdown sederhana (aman dari XSS: HTML di-escape dulu)
 // ==========================================================
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderMarkdown(text) {
+  const codeBlocks = [];
+  const inlineCodes = [];
+
+  let src = escapeHtml(text);
+
+  // Blok kode ```lang ... ``` (termasuk yang belum ditutup saat streaming)
+ 

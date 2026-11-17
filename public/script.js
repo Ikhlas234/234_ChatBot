@@ -363,3 +363,23 @@ async function sendMessage(rawText) {
 // ==========================================================
 // Event listener
 // ==========================================================
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  if (isLoading) {
+    controller?.abort();
+    return;
+  }
+
+  sendMessage(input.value);
+});
+
+input.addEventListener("input", autoResize);
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+    e.preventDefault();
+    form.requestSubmit();
+  }
+});
+

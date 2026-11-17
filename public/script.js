@@ -383,3 +383,22 @@ input.addEventListener("keydown", (e) => {
   }
 });
 
+suggestions.addEventListener("click", (e) => {
+  const chip = e.target.closest(".chip");
+  if (chip) sendMessage(chip.dataset.prompt);
+});
+
+clearBtn.addEventListener("click", () => {
+  controller?.abort();
+  controller = null;
+  session++;
+  history = [];
+  chatBox.innerHTML = "";
+  suggestions.classList.remove("hidden");
+  setLoading(false);
+  showWelcome();
+});
+
+// ---------- Mulai ----------
+showWelcome();
+input.focus();

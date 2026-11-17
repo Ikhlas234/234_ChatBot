@@ -288,4 +288,41 @@ async function sendMessage(rawText) {
       throw new Error(await readError(res));
     }
 
-    
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let finished = false;
+
+    while (!finished) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      const lines = buffer.split("\n");
+      buffer = lines.pop(); // sisakan baris yang belum lengkap
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed.startsWith("data:")) continue;
+
+        const data = trimmed.slice(5).trim();
+
+        if (data === "[DONE]") {
+          finished = true;
+          break;
+        }
+
+        try {
+          const chunk = JSON.parse(data); // server mengirim string JSON
+          if (typeof chunk === "string") {
+            reply += chunk;
+            bot.setContent(reply);
+          }
+        } catch {
+          /* lewati potongan yang tidak valid */
+        }
+      }
+    }
+
+   
